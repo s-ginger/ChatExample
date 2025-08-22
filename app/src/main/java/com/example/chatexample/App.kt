@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.chatexample.helper.SettingsHelper
 import com.example.chatexample.viewmodel.ChatViewModel
 
 @Composable
@@ -58,7 +59,7 @@ fun App(modifier: Modifier, viewModel: ChatViewModel) {
         modifier = modifier.fillMaxWidth()
     ) {
         items(messages.size) { index ->
-            if (messages[index].startsWith("Я")) {
+            if (messages[index].startsWith("Я") || messages[index].contains(SettingsHelper.idMy!!)) {
                 TextYour(messages[index])
             } else {
                 TextOthers(messages[index])
