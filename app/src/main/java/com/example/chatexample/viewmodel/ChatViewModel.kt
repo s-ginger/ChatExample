@@ -70,7 +70,6 @@ class ChatViewModel() : ViewModel() {
             json.put("message", msg)
             webSocket?.send(json.toString())
 
-            _messages.value = _messages.value + "Я: $msg"
         }
     }
 

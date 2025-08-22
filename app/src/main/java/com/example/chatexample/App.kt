@@ -54,7 +54,6 @@ fun TextYour(text: String) {
 @Composable
 fun App(modifier: Modifier, viewModel: ChatViewModel) {
     val messages by viewModel.messages.collectAsState()
-
     LazyColumn (
         modifier = modifier.fillMaxWidth()
     ) {
