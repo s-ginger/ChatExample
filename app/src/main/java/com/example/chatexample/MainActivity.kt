@@ -55,9 +55,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         SettingsHelper.init(this)
-
-        chatViewModel.setUrl(SettingsHelper.url ?: "wss://echo.websocket.org/")
-
+        chatViewModel.userId = SettingsHelper.idMy
+//        chatViewModel.setUrl(SettingsHelper.url ?: "wss://echo.websocket.org/")
+        chatViewModel.setUrl("https://de33c7b6ae4520.lhr.life/")
         setContent {
             ChatExampleTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
