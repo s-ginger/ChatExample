@@ -1,6 +1,11 @@
 package com.example.chatexample
 
+import android.content.ComponentName
+import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.IBinder
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -42,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.chatexample.helper.SettingsHelper
+import com.example.chatexample.service.MyService
 import com.example.chatexample.ui.theme.ChatExampleTheme
 import com.example.chatexample.viewmodel.ChatViewModel
 import kotlinx.coroutines.launch
@@ -50,14 +56,50 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
 
     private val chatViewModel: ChatViewModel by viewModels()
+    private var myService: MyService? = null
+    private var bound = false
+
+    private val connection = object : ServiceConnection {
+        override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
+            val binder = p1 as MyService.LocalBinder
+            myService = binder.getService()
+            bound = true
+
+            Toast.makeText(this@MainActivity, myService?.doSomething(), Toast.LENGTH_SHORT).show()
+        }
+
+        override fun onServiceDisconnected(p0: ComponentName?) {
+            bound = false
+            myService = null
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        intent = Intent(this, MyService::class.java)
+        startService(intent)
+        bindService(intent, connection, BIND_AUTO_CREATE)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (bound) {
+            unbindService(connection)
+            bound = false
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         SettingsHelper.init(this)
+
         chatViewModel.userId = SettingsHelper.idMy
         chatViewModel.setUrl(SettingsHelper.url ?: "wss://echo.websocket.org/")
-//        chatViewModel.setUrl("https://de33c7b6ae4520.lhr.life/")
+
+
+
         setContent {
             ChatExampleTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
