@@ -3,6 +3,7 @@ package com.example.chatexample
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.widget.Toast
@@ -77,7 +78,11 @@ class MainActivity : ComponentActivity() {
     override fun onStart() {
         super.onStart()
         intent = Intent(this, MyService::class.java)
-        startService(intent)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent)
+        } else {
+            startService(intent)
+        }
         bindService(intent, connection, BIND_AUTO_CREATE)
     }
 
