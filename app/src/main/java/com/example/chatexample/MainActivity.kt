@@ -1,5 +1,6 @@
 package com.example.chatexample
 
+import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
@@ -75,10 +76,12 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @SuppressLint("UnsafeIntentLaunch")
     override fun onStart() {
         super.onStart()
         intent = Intent(this, MyService::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O) {
             startForegroundService(intent)
         } else {
             startService(intent)
@@ -116,10 +119,6 @@ class MainActivity : ComponentActivity() {
 
     }
 }
-
-
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

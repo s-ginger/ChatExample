@@ -10,11 +10,12 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.chatexample.R
+import kotlinx.coroutines.Job
 
 class MyService : Service() {
 
     private val  binder = LocalBinder()
-
+    private var job: Job? = null
 
     inner class LocalBinder : Binder() {
         fun getService(): MyService = this@MyService
@@ -49,6 +50,8 @@ class MyService : Service() {
 
         startForeground(1, notification)
     }
+
+
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         // Тут логика фоновой работы (например, музыка, таймер, загрузка и т.д.)
